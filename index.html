@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convert Artikel ke HTML</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: auto;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background: #007BFF;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .output {
+            text-align: left;
+            margin-top: 20px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .toggle {
+            background: #007BFF;
+            color: white;
+            padding: 5px;
+            border: none;
+            cursor: pointer;
+            margin-top: 5px;
+            font-size: 16px;
+            display: block;
+            width: 100%;
+            text-align: left;
+        }
+        .toggle-content {
+            display: none;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Convert Artikel ke HTML</h2>
+        <textarea id="articleInput" placeholder="Masukkan artikel di sini..."></textarea>
+        <button onclick="convertToHTML()">Convert</button>
+        <div class="output" id="output"></div>
+    </div>
+
+    <script>
+        function convertToHTML() {
+            let input = document.getElementById("articleInput").value;
+            let lines = input.split("\n");
+            let outputHTML = "";
+            let isFirstParagraph = true;
+
+            lines.forEach(line => {
+                if (line.startsWith("###")) {
+                    let content = line.replace("###", "").trim();
+                    let toggleId = "toggle_" + Math.random().toString(36).substring(7);
+                    outputHTML += `<button class="toggle" onclick="toggleContent('${toggleId}')">${content}</button>`;
+                    outputHTML += `<div id="${toggleId}" class="toggle-content">${content}</div>`;
+                } else if (line.startsWith("##")) {
+                    outputHTML += `<h2>${line.replace("##", "").trim()}</h2>`;
+                } else if (line.startsWith("#")) {
+                    outputHTML += `<b>${line.replace("#", "").trim()}</b>`;
+                } else if (isFirstParagraph && line.trim() !== "") {
+                    outputHTML += `<h1>${line.trim()}</h1>`;
+                    isFirstParagraph = false;
+                } else {
+                    outputHTML += `<p>${line.trim()}</p>`;
+                }
+            });
+
+            document.getElementById("output").innerHTML = outputHTML;
+        }
+
+        function toggleContent(id) {
+            let content = document.getElementById(id);
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        }
+    </script>
+
+</body>
+</html>
